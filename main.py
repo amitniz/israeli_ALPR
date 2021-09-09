@@ -18,13 +18,11 @@ MIN_HEIGHT = 15
 MIN_CONTOUR_AREA = 300
 MAX_CONTOUR_AREA = 1500
 
-img_path = 'vid4.mp4'
-#img_path = 'car_5.jpeg'
+ifile_path = 'vid4.mp4'
 def findLicensePlate(im):
     blured = cv.GaussianBlur(im,(7,7),1)
     gray = cv.cvtColor(im,cv.COLOR_BGR2GRAY)
     im_hsv = cv.cvtColor(blured,cv.COLOR_BGR2HSV)
-    #cv.imshow('blured',blured)
     plate_mask =cv.inRange(im_hsv,LOW_THRESHOLD,HIGH_TRESHOLD)
     
     contours,_ = cv.findContours(plate_mask,cv.RETR_LIST,cv.CHAIN_APPROX_NONE)
@@ -51,7 +49,7 @@ def findLicensePlate(im):
             
     return im,blured,plate_mask
 
-cap =cv.VideoCapture(img_path)
+cap =cv.VideoCapture(ifile_path)
 ret,im = cap.read()
 while ret:
     width = int(im.shape[1] * SCALE / 100)
@@ -59,8 +57,6 @@ while ret:
     dim = (width, height)
     resized =cv.resize(im,dim, interpolation = cv.INTER_CUBIC)
     img,blured,masked =findLicensePlate(resized)
-    #cv.imshow("blur",blured)
-    #cv.imshow("mask",masked)
     cv.imshow("plate",img)
     if cv.waitKey(30) & 0xFF == ord('q'):
         break
@@ -69,13 +65,4 @@ while ret:
     
 
 cap.release()
-'''
-
-im = cv.imread(img_path)
-img,blured,masked =findLicensePlate(im)
-#cv.imshow("blur",blured)
-cv.imshow("mask",masked)
-cv.imshow("plate",img)
-cv.waitKey(0) & 0xFF == ord('q')
-'''
 cv.destroyAllWindows()
